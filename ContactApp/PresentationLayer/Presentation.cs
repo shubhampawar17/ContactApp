@@ -16,6 +16,7 @@ namespace ContactApp.PresentationLayer
     {
         private readonly UserController _userController = new UserController();
         private readonly ContactController _contactController = new ContactController();
+        private readonly ContactDetailController _contactDetailController = new ContactDetailController();
 
         public void Start()
         {
@@ -100,39 +101,87 @@ namespace ContactApp.PresentationLayer
                 }
             }
         }
-
         private void DisplayStaffMenu()
         {
             while (true)
             {
-                Console.WriteLine("\nStaff Menu:");
-                Console.WriteLine("1. Add Contact");
-                Console.WriteLine("2. Modify Contact");
-                Console.WriteLine("3. Delete Contact");
-                Console.WriteLine("4. Display All Contacts");
-                Console.WriteLine("5. Logout");
-
+                Console.WriteLine("\nStaff Menu:\n1. Work on Contacts\n2. Work on Contact Details\n3. Logout");
                 int choice = int.Parse(Console.ReadLine());
 
                 switch (choice)
                 {
-                    case 1:
-                        AddContact();
-                        break;
-                    case 2:
-                        ModifyContact();
-                        break;
-                    case 3:
-                        DeleteContact();
-                        break;
-                    case 4:
-                        DisplayAllContacts();
-                        break;
-                    case 5:
-                        return;
+                    case 1: DisplayContactMenu(); break;
+                    case 2: DisplayContactDetailMenu(); break;
+                    case 3: return;
+                    default: Console.WriteLine("Invalid choice."); break;
                 }
             }
         }
+
+        private void DisplayContactMenu()
+        {
+            Console.WriteLine("\n1. Add Contact\n2. Modify Contact\n3. Delete Contact\n4. Display All Contacts\n5. Logout");
+            int choice = int.Parse(Console.ReadLine());
+
+            switch (choice)
+            {
+                case 1: AddContact(); break;
+                case 2: ModifyContact(); break;
+                case 3: DeleteContact(); break;
+                case 4: DisplayAllContacts(); break;
+                case 5: return;
+                default: Console.WriteLine("Invalid choice."); break;
+            }
+        }
+
+        private void DisplayContactDetailMenu()
+        {
+            Console.WriteLine("\n1. Add Contact Detail\n2. Modify Contact Detail\n3. Delete Contact Detail\n4. Display All Contact Details\n5. Logout");
+            int choice = int.Parse(Console.ReadLine());
+
+            switch (choice)
+            {
+                case 1: AddContactDetail(); break;
+                case 2: ModifyContactDetail(); break;
+                case 3: DeleteContactDetail(); break;
+                case 4: DisplayAllContactDetails(); break;
+                case 5: return;
+                default: Console.WriteLine("Invalid choice."); break;
+            }
+        }
+
+        //private void DisplayStaffMenu()
+        //{
+        //    while (true)
+        //    {
+        //        Console.WriteLine("\nStaff Menu:");
+        //        Console.WriteLine("1. Add Contact");
+        //        Console.WriteLine("2. Modify Contact");
+        //        Console.WriteLine("3. Delete Contact");
+        //        Console.WriteLine("4. Display All Contacts");
+        //        Console.WriteLine("5. Logout");
+
+        //        int choice = int.Parse(Console.ReadLine());
+
+        //        switch (choice)
+        //        {
+        //            case 1:
+        //                AddContact();
+        //                break;
+        //            case 2:
+        //                ModifyContact();
+        //                break;
+        //            case 3:
+        //                DeleteContact();
+        //                break;
+        //            case 4:
+        //                DisplayAllContacts();
+        //                break;
+        //            case 5:
+        //                return;
+        //        }
+        //    }
+        //}
 
         private void AddUser()
         {
@@ -213,5 +262,86 @@ namespace ContactApp.PresentationLayer
                 Console.WriteLine($"ID: {contact.Id}, Name: {contact.Name}");
             }
         }
+
+        private List<ContactDetail> contactDetails = new List<ContactDetail>();
+
+        private void AddContactDetail()
+        {
+            Console.WriteLine("Enter Contact Detail ID:");
+            int detailID = int.Parse(Console.ReadLine());
+
+            Console.WriteLine("Enter Contact ID associated with this detail:");
+            int contactID = int.Parse(Console.ReadLine());
+
+            Console.WriteLine("Enter Detail (e.g., Phone Number, Email):");
+            string detail = Console.ReadLine();
+
+            ContactDetail newDetail = new ContactDetail
+            {
+                DetailID = detailID,
+                ContactID = contactID,
+                Detail = detail,
+                IsActive = true
+            };
+
+            contactDetails.Add(newDetail);
+            Console.WriteLine("Contact Detail added successfully!");
+        }
+
+        // Method to modify an existing contact detail
+        private void ModifyContactDetail()
+        {
+            Console.WriteLine("Enter Contact Detail ID to modify:");
+            int detailID = int.Parse(Console.ReadLine());
+
+            ContactDetail existingDetail = contactDetails.Find(detail => detail.DetailID == detailID && detail.IsActive);
+            if (existingDetail != null)
+            {
+                Console.WriteLine("Enter new Contact ID:");
+                existingDetail.ContactID = int.Parse(Console.ReadLine());
+
+                Console.WriteLine("Enter new Detail:");
+                existingDetail.Detail = Console.ReadLine();
+
+                Console.WriteLine("Contact Detail modified successfully!");
+            }
+            else
+            {
+                Console.WriteLine("Contact Detail not found or is inactive.");
+            }
+        }
+
+        // Method to delete a contact detail
+        private void DeleteContactDetail()
+        {
+            Console.WriteLine("Enter Contact Detail ID to delete:");
+            int detailID = int.Parse(Console.ReadLine());
+
+            ContactDetail existingDetail = contactDetails.Find(detail => detail.DetailID == detailID && detail.IsActive);
+            if (existingDetail != null)
+            {
+                existingDetail.IsActive = false;
+                Console.WriteLine("Contact Detail deleted successfully!");
+            }
+            else
+            {
+                Console.WriteLine("Contact Detail not found or is already inactive.");
+            }
+        }
+
+        // Method to display all active contact details
+        private void DisplayAllContactDetails()
+        {
+            Console.WriteLine("List of Active Contact Details:");
+            foreach (var detail in contactDetails)
+            {
+                if (detail.IsActive)
+                {
+                    Console.WriteLine($"Detail ID: {detail.DetailID}, Contact ID: {detail.ContactID}, Detail: {detail.Detail}, Status: Active");
+                }
+            }
+        }
+
+
     }
 }

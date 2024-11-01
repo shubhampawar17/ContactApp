@@ -9,8 +9,9 @@ namespace ContactApp.Models
     public class ContactDetail
     {
         public int Id { get; set; }
-        public int ContactId { get; set; } // Foreign key reference to Contact
-        public string Detail { get; set; }
+        public int ContactID { get; set; } // Foreign key reference to Contact
+        public int DetailID { get; set; }
         public bool IsActive { get; set; } = true;
+        public string? Detail { get; internal set; }
     }
 }
